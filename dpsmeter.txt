@@ -1,0 +1,61 @@
+var beginFrame = -1
+var fightBegin = -1
+var average = 0
+var prev = 0
+var overall = 0
+var totalDamage = 0
+var incomingDamage = 0
+var name = ＂foo＂
+var finalFrame = 0
+var finalDPS = 0
+func DamageMeter(row)
+  ?loc.loop
+    beginFrame = -1
+    prev = average
+    average = 0
+    totalDamage = totalDamage + incomingDamage
+    incomingDamage = 0
+    name = ＂foo＂
+    finalDPS = 450
+  ?foe.count > 0
+    ?foe = boss & name = ＂foo＂
+      name = foe.name
+      beginFrame = time
+      fightBegin = time
+      incomingDamage = foe.maxhp + foe.maxarmor
+    ?name ! ＂foo＂
+      finalFrame = time
+      ?foe.name ! name
+        beginFrame = time
+        name = foe.name
+        prev = average
+        totalDamage = totalDamge + incomingDamage
+        overall = totalDamage * 30 / (time - fightBegin)
+        incomingDamage = foe.maxhp + foe.maxarmor
+      ?ai.paused
+        // Can't do anything so don't start
+        beginFrame = time
+        name = foe.name
+        ?time ! fightBegin
+          overall = totalDamage * 30 / (time - fightBegin)
+      ?beginFrame ! time
+        var diff = time - beginFrame
+        ?diff ! 0
+          var hploss = foe.maxhp - foe.hp
+          var armorloss = foe.maxarmor - foe.armor
+          var damage = hploss + armorloss
+          average = damage * 30 / (diff)
+        :
+          average = 0
+      >`0,@row@,DPS: @average@(@overall@)@prev@*
+      
+  ?finalDPS > 0
+    ?finalDPS = 450
+      overall = totalDamage * 30 / (finalFrame - fightBegin)
+      totalDamage = 0
+      fightBegin = -1
+    >`0,@row@,DPS: @prev@(@overall@)  
+    finalDPS--
+    ?finalDPS = 0
+      prev = 0
+      overall = 0
