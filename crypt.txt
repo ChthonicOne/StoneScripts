@@ -1,0 +1,66 @@
+var g = new gear
+
+var counter = 0
+var reset = 0
+?loc = crypt
+  ?loc.loop
+    counter = 0
+    reset = 0
+  reset = 0
+  ?foe = boss & hp < 11
+    activate potion
+  ?foe = Booo
+    ?foe.distance <= 20
+      ?foe.debuffs.count = 0
+        g.IceSlowWand(l)
+      :
+        g.LifeStealWand(l)
+      g.LifeWand(r)
+    :
+      g.Trisk(l)
+      g.LifeShield()
+  ?foe ! Booo & foe ! boss
+    ?foe.distance > 22
+      g.Trisk(l)
+      g.LifeShield()
+    :?foe.distance <= 22 & foe.distance > 16
+      g.IceCrossbow()
+    :?foe.distance <= 16 & foe.distance >= 10
+      ?item.GetCooldown(＂dash＂) <= 0
+        g.Dash()
+      :
+        g.Bash()
+    :
+      g.LifeStealSwordAndShield()
+  :?foe = boss
+    ?foe.state = 32
+      counter++
+    :
+      counter = 0
+      reset = 1
+    ?foe = skinless
+      ?counter = 65 & item.GetCooldown(＂mind＂) = 0
+        g.Mind(r)
+      :?foe.distance > 22
+        g.Trisk(l)
+        g.LifeShield()
+      :
+        g.IceCritbow()
+    :
+      ?foe.distance > 16
+        g.Trisk(l)
+        g.LifeShield()
+      :?foe.distance <= 16 & foe.distance >= 10
+        ?item.GetCooldown(＂dash＂) <= 0
+          g.Dash()
+        :
+          g.Bash()
+      :
+        g.LifeStealSword(l)
+        ?foe.debuffs.string ! ＂dot:＂
+          g.FireSword(r)
+        :
+          ?hp < maxhp - 30 | reset = 1
+            g.LifeShield()
+          :
+            g.IceSword(r)
