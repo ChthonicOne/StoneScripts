@@ -1,66 +1,83 @@
 var g = new gear
 
 var counter = 0
-var reset = 0
+var reset = 0   // This will go away when I get a strong splash Life sword
+var end = 0
 ?loc = crypt
   ?loc.loop
     counter = 0
     reset = 0
+    end = 0
   reset = 0
   ?foe = boss & hp < 11
     activate potion
-  ?foe = Booo
-    ?foe.distance <= 20
-      ?foe.debuffs.count = 0
-        g.IceSlowWand(l)
-      :
-        g.LifeStealWand(l)
-      g.LifeWand(r)
-    :
-      g.Trisk(l)
-      g.LifeShield()
-  ?foe ! Booo & foe ! boss
-    ?foe.distance > 22
-      g.Trisk(l)
-      g.LifeShield()
-    :?foe.distance <= 22 & foe.distance > 16
-      g.IceCrossbow()
-    :?foe.distance <= 16 & foe.distance >= 10
-      ?item.GetCooldown(＂dash＂) <= 0
-        g.Dash()
-      :
-        g.Bash()
-    :
-      g.LifeStealSwordAndShield()
-  :?foe = boss
+  ?foe = Booo & end = 0
+    Ghost()
+  ?foe ! Booo & foe ! boss & end = 0
+    MeleeFoe()
+  :?foe = boss | end = 1
     ?foe.state = 32
       counter++
     :
       counter = 0
       reset = 1
     ?foe = skinless
-      ?counter = 65 & item.GetCooldown(＂mind＂) = 0
-        g.Mind(r)
-      :?foe.distance > 22
-        g.Trisk(l)
-        g.LifeShield()
-      :
-        g.IceCritbow()
+      PallasSkinless()
     :
-      ?foe.distance > 16
-        g.Trisk(l)
-        g.LifeShield()
-      :?foe.distance <= 16 & foe.distance >= 10
-        ?item.GetCooldown(＂dash＂) <= 0
-          g.Dash()
-        :
-          g.Bash()
+      end = 1
+      PallasLegless()
+            
+func MeleeFoe()
+  ?foe.distance > 22
+    g.Trisk(l)
+    g.LifeShield()
+  :?foe.distance <= 22 & foe.distance > 16 
+    g.IceCrossbow()
+  :?foe.distance <= 16 & foe.distance >= 10
+    ?item.GetCooldown(＂dash＂) <= 0
+      g.Dash()
+    :
+      g.Bash()
+  :?foe.distance <= 9
+    g.LifeStealSwordAndShield()
+    
+func Ghost()
+  ?foe.distance >= 21
+    g.Trisk(l)
+    g.LifeShield()
+  :
+    ?foe.debuffs.count = 0
+      g.IceSlowWand(l)
+    :
+      g.LifeStealWand(l)
+    g.LifeWand(r)
+
+func PallasSkinless()
+  ?counter = 65 & item.GetCooldown(＂mind＂) = 0
+    g.Mind(r)
+  :?foe.distance > 22
+    g.Trisk(l)
+    g.LifeShield()
+  :
+    g.IceCritbow()
+
+func PallasLegless() // He has a ghost, but the ghost never gets close as we're close to him so we shouldn't have to worry.
+  ?foe.distance > 16
+    g.Trisk(l)
+    g.LifeShield()
+  :?foe.distance <= 16 & foe.distance >= 10
+    ?item.GetCooldown(＂dash＂) <= 0
+      g.Dash()
+    :
+      g.Bash()
+  :
+    g.LifeStealSword(l)     //Need stronger splash sword
+    ?foe.debuffs.string ! ＂dot:＂
+      g.FireSword(r)
+    :?foe.debuffs.string ! "damage:"
+      g.PoisonSword(r)
+    :
+      ?hp < maxhp - 30 | reset = 1
+        g.LifeShield()      //Replace with lifestealsword when I get stronger splash sword
       :
-        g.LifeStealSword(l)
-        ?foe.debuffs.string ! ＂dot:＂
-          g.FireSword(r)
-        :
-          ?hp < maxhp - 30 | reset = 1
-            g.LifeShield()
-          :
-            g.IceSword(r)
+        g.IceSword(r)

@@ -1,0 +1,109 @@
+var g = new gear
+
+var spdr = -1
+?loc = caves
+  ?loc.loop
+    spdr = 0
+  ?foe = caviar
+    Eggs()
+  :?foe ! boss & foe ! chopper
+    Mobs()
+  :?foe = chopper
+    Scorpions()
+  :
+    Spider()
+  ?pickup.distance < 10
+    g.Star(r)
+
+func Mobs()
+  ?foe.distance <= 23 & foe.distance >= 17
+    g.IceCrossbow()
+  :?foe.distance >= 11 & foe.distance <= 16
+    ?item.GetCooldown(＂dash＂) <= 0
+      g.Dash()
+    :
+      g.Bash()
+  :?foe.distance < 11
+    ?hp >= maxhp
+      g.IceSword(l)
+      g.IceShield()
+    :?hp <= maxhp - 15
+      g.IceSword(l)
+      g.LifeStealSword(r)
+    :
+      g.LifeStealSword(l)
+      g.LifeShield()
+  :
+    g.Trisk(l)
+    g.IceShield()
+
+func Scorpions()
+  ?foe.distance < 10 &
+  ^item.GetCooldown(＂mind＂) <= 0
+    g.Mind(l)
+  :?foe.distance < 23 & foe.distance > 6
+    g.IceCritbow()
+  :?foe.distance <= 6
+    ?hp >= maxhp
+      g.IceSword(l)
+      g.IceShield()
+    :?hp <= maxhp - 15
+      g.IceSword(l)
+      g.LifeStealSword(r)
+    :
+      g.LifeStealSword(l)
+      g.LifeShield()
+  :
+    g.Trisk(l)
+    g.IceShield()
+
+func Eggs()
+  ?foe.count > 2
+    Scorpions()
+  :?foe.distance >= 11 & foe.distance <= 16
+    ?item.GetCooldown(＂dash＂) <= 0
+      g.Dash()
+    :
+      g.Bash()
+  :?foe.distance < 11
+    ?hp >= maxhp
+      g.IceSword(l)
+      g.IceShield()
+    :?hp <= maxhp - 15
+      g.IceSword(l)
+      g.LifeStealSword(r)
+    :
+      g.LifeStealSword(l)
+      g.LifeShield()
+  :
+    g.Trisk(l)
+    g.IceShield()
+
+func Spider()
+  ?spdr <= 0 & foe.state = 100 &
+  ^item.GetCooldown(＂mind＂) <= 15
+    spdr = 1
+    g.IceSword(l)
+    g.Dash()
+  :?spdr <= 0 & foe.state = 142 &
+  ^ item.GetCooldown(＂mind＂) <= 0
+    spdr = 1
+    g.Mind(l)
+  :?foe.distance < 10
+    g.IceSword(l)
+    ?hp < maxhp
+      ?foe.debuffs.string ! ＂dot:＂
+        g.FireSword(r)
+      :?foe.debuffs.string ! ＂damage:＂
+        g.PoisonSword(r)
+      :
+        g.LifeStealSword(r)
+    :?foe.debuffs.string ! ＂dot:＂
+      g.FireSword(r)
+    :?foe.debuffs.string ! ＂damage:＂
+      g.PoisonSword(r)
+  :
+    g.IceCritbow()
+  ?foe.state ! 142 & foe.state ! 100
+    spdr = 0
+

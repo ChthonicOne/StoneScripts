@@ -52,19 +52,19 @@ func IceSword(hand)
     equipR Big Ice Sword +6 9* D
 
 func IceCrossbow()
-  equip Ice Crossbow +6 9* D
+  equip Ice Crossbow +7 9* D
 
 func IceCritbow()
-  equip Ice Crossbow +8 9* D
+  equip Ice Crossbow +8 10* D
 
 func IceShield()
   equipR Ice Shield +6 9* ai
 
 func IceSlowWand(hand)
   ?hand = ＂l＂
-    equipL Ice Wand +4 8* dI
+    equipL Ice Wand +6 8* dI
   :
-    equipR Ice Wand +4 8* dI
+    equipR Ice Wand +6 8* dI
 
 func PoisonCritbow()
   equip Poison Crossbow +6 9* D
@@ -85,7 +85,7 @@ func PoisonShield()
   equip Poison Shield +6 7* ap
   
 func Bardiche()
-  equip Bardiche +2 10*
+  equip Bardiche +3 10*
 
 func Star(hand)
   ?hand = ＂l＂
