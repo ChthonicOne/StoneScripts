@@ -1,14 +1,16 @@
 var g = new gear
 
-var spdr = -1
+var fwd = -1
+var bck = -1
 ?loc = caves
   ?loc.loop
-    spdr = 0
+    fwd = 0
+    bck = 0
   ?foe = caviar
     Eggs()
   :?foe ! boss & foe ! chopper
     Mobs()
-  :?foe = chopper
+  :?foe = chopper | foe = warmer
     Scorpions()
   :
     Spider()
@@ -42,7 +44,7 @@ func Scorpions()
   ^item.GetCooldown(＂mind＂) <= 0
     g.Mind(l)
   :?foe.distance < 23 & foe.distance > 6
-    g.IceCritbow()
+    g.IceCrossbow()
   :?foe.distance <= 6
     ?hp >= maxhp
       g.IceSword(l)
@@ -80,14 +82,13 @@ func Eggs()
     g.IceShield()
 
 func Spider()
-  ?spdr <= 0 & foe.state = 100 &
-  ^item.GetCooldown(＂mind＂) <= 15
-    spdr = 1
+  ?fwd <= 0 & foe.state = 133 & item.GetCooldown(＂mind＂) <= 15 & armor < 2
+    fwd = 1
     g.IceSword(l)
     g.Dash()
-  :?spdr <= 0 & foe.state = 142 &
+  :?bck <= 0 & foe.state = 142 &
   ^ item.GetCooldown(＂mind＂) <= 0
-    spdr = 1
+    bck = 1
     g.Mind(l)
   :?foe.distance < 10
     g.IceSword(l)
@@ -102,8 +103,13 @@ func Spider()
       g.FireSword(r)
     :?foe.debuffs.string ! ＂damage:＂
       g.PoisonSword(r)
+  :?foe.distance = 17
+    g.Trisk(l)
+    g.LifeShield()
   :
     g.IceCritbow()
-  ?foe.state ! 142 & foe.state ! 100
-    spdr = 0
+  ?foe.state ! 142 
+    bck = 0
+  ?foe.state ! 133
+    fwd = 0
 
