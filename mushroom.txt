@@ -27,15 +27,7 @@ func Escargo()
     :
       g.Bash()
   :?foe.distance <= 10
-    ?hp < maxhp - 30
-      g.LifeStealSword(l)
-      g.LifeShield()
-    :?hp < maxhp
-      g.PoisonHammer(l)
-      g.LifeStealSword(r)
-    :
-      g.PoisonHammer(l)
-      g.PoisonSword(r)
+    g.Bardiche()
 
 func Termites()
   ?foe.distance > 10
@@ -94,7 +86,7 @@ func BigBoss()
         g.PoisonSword(r)
   
 func ArmorBoss()
-  ?foe.state = 32 & foe.state ! 33
+  ?foe.state = 32 | foe.state = 33
     ?item.GetCooldown(＂mind＂) = 0
       g.Mind(r)
     :
@@ -105,6 +97,7 @@ func ArmorBoss()
       g.Trisk(l)
       g.PoisonShield()
     ?foe.distance >= 11 & foe.distance <= 16
+      >`0,10,@foe.state@
       ?item.GetCooldown(＂dash＂) = 0
         g.Dash()
       :
