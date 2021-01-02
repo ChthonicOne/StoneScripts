@@ -1,0 +1,136 @@
+var g = new gear
+
+?loc = mushroom
+  ?hp < 11
+    activate potion
+  ?foe = snail
+    Escargo()
+  :?foe = ant
+    Termites()
+  :?foe ! boss
+    Mound()
+  :
+    ?foe = Angry
+      BigBoss()
+    :?foe = Morel
+      ArmorBoss()
+    :
+      BackBoss()
+
+func Escargo()
+  ?foe.distance > 16
+    g.Trisk(l)
+    g.PoisonShield()
+  :?foe.distance >= 11 & foe.distance <= 16
+    ?item.GetCooldown(＂dash＂) <= 0
+      g.Dash()
+    :
+      g.Bash()
+  :?foe.distance <= 10
+    ?hp < maxhp - 30
+      g.LifeStealSword(l)
+      g.LifeShield()
+    :?hp < maxhp
+      g.PoisonHammer(l)
+      g.LifeStealSword(r)
+    :
+      g.PoisonHammer(l)
+      g.PoisonSword(r)
+
+func Termites()
+  ?foe.distance > 10
+    g.Trisk(l)
+    g.PoisonShield()
+  :?foe.distance <= 10
+    g.Bardiche()
+
+func Mound()
+  ?foe.distance > 16
+    g.Trisk(l)
+    g.PoisonShield()
+  :?foe.distance >= 11 & foe.distance <= 16
+    ?item.GetCooldown(＂dash＂) <= 0
+      g.Dash()
+    :
+      g.Bash()
+  :?foe.distance <= 10
+    ?hp < maxhp - 30
+      g.LifeStealSword(l)
+      g.LifeShield()
+    :?hp < maxhp
+      g.PoisonSword(l)
+      g.LifeStealSword(r)
+    :?item.GetCooldown(＂bardiche＂) <= 0 | item.GetCooldown(＂bardiche＂) > 870
+      g.Bardiche()
+      activate R
+    :
+      g.PoisonSword(l)
+      g.PoisonShield()
+
+func BigBoss()
+  ?foe.state = 32 
+    ?item.GetCooldown(＂mind＂) = 0
+      g.Mind(r)
+    :
+      ?foe.distance >= 10
+        g.PoisonCritbow()
+  :
+    ?foe.distance > 16
+      g.Trisk(l)
+      g.PoisonShield()
+    :?foe.distance >= 11 & foe.distance <= 16
+      ?item.GetCooldown(＂dash＂) = 0
+        g.Dash()
+      :
+        g.Bash()
+    :?foe.distance <= 10
+      ?foe.debuffs.string ! ＂dot:＂
+        g.FireSword(l)
+      :
+        g.PoisonHammer(l)
+      ?foe.debuffs.string ! ＂dot_＂ & foe.state ! 0
+        g.FireShield()
+      :
+        g.PoisonSword(r)
+  
+func ArmorBoss()
+  ?foe.state = 32 & foe.state ! 33
+    ?item.GetCooldown(＂mind＂) = 0
+      g.Mind(r)
+    :
+      ?foe.distance >= 10
+        g.PoisonCritbow()
+  :
+    ?foe.distance > 16
+      g.Trisk(l)
+      g.PoisonShield()
+    ?foe.distance >= 11 & foe.distance <= 16
+      ?item.GetCooldown(＂dash＂) = 0
+        g.Dash()
+      :
+        g.Bash()
+    :?foe.distance <= 10
+      ?foe.debuffs.string ! ＂dot:＂
+        g.FireSword(l)
+      :
+        g.PoisonHammer(l)
+      g.PoisonSword(r)
+
+func BackBoss()
+  ?foe.distance > 16
+    g.Trisk(l)
+    g.PoisonShield()
+  :?foe.distance >= 11 & foe.distance <= 16
+    ?item.GetCooldown(＂dash＂) = 0
+      g.Dash()
+    :
+      g.Bash()
+  :?foe.distance <= 10
+    ?foe.debuffs.string ! ＂dot:＂
+      g.FireSword(l)
+    :
+      g.PoisonHammer(l)
+    ?foe.debuffs.string ! ＂dot_＂ & foe.state ! 0
+      g.FireShield()
+    :
+      g.PoisonSword(r)
