@@ -1,0 +1,99 @@
+var g = new gear
+
+var toggle = -1
+var statechange = 1
+var counter = 0
+?loc = deadwood
+  ?loc.loop
+    toggle = -1
+    statechange = -1
+    counter = 0
+  ?foe ! boss
+    ?foe ! Scarab
+      Bugs()
+    :
+      Beetles()
+  :
+    Tree()
+  ?pickup.distance < 10
+    g.Star(r)
+    g.Trisk(l)
+  ?harvest.distance < 10
+    g.Ouro(l)
+    g.Axe(r)
+    ?harvest.distance < 5 & item.GetCooldown(＂hatchet＂) = 0
+      activate R
+    
+func Bugs()
+  ?foe.distance > 22
+    g.Trisk(l)
+    g.CShield()
+  :?foe.distance <= 22 & foe.distance >= 10
+    g.IceCritbow()
+  :
+    g.Bardiche()
+  
+func Beetles()
+  ?foe.distance > 9
+    g.Trisk(l)
+    g.CShield()
+  :
+    g.Bardiche()
+
+func Tree()
+  ?hp < 20
+    activate potion
+  ?foe.state = 32
+    ?statechange ! 1
+      statechange = 1
+      counter = 0
+    counter++
+    ?item.GetCooldown(＂mind＂) = 0 & foe.distance < 10 & counter = 25 & toggle = 1 
+      g.Mind(l)
+    :?foe.distance > 10 & toggle = 1
+       ?foe.distance > 16
+         g.Trisk(l)
+         g.CShield()
+       :
+         g.IceCritbow()
+    :?toggle <= 0
+      ?item.GetCooldown(＂bash＂) = 0 & foe.distance >= 11 & counter = 25
+        g.Bash()
+      :
+        ChooseSwords()
+  :
+    ?statechange = 1
+      statechange = 0
+      ?toggle = 0
+        toggle = 1
+      :
+        toggle = 0
+    ?toggle <= 0
+      ?foe.distance > 16
+        g.Trisk(l)
+        g.CShield()
+      :?foe.distance >= 11 & foe.distance <= 16
+        ?item.GetCooldown(＂dash＂) <= 0
+          g.Dash()
+        :
+          g.Bash()
+      :
+        ChooseSwords()
+    :
+      ?foe.distance > 16
+        g.Trisk(l)
+        g.CShield()
+      :
+        g.IceCritbow() 
+
+func ChooseSwords()
+  ?foe.debuffs.string ! ＂dot:＂
+    g.FireSword(r)
+    g.IceSword(l)
+  :?foe.debuffs.string ! ＂damage:＂
+    g.PoisonSword(r)
+    g.IceSword(l)
+  :
+    g.Bardiche()
+    ?item.GetCooldown(＂bardiche＂) <= 0 | item.GetCooldown(＂bardiche＂)
+      activate R

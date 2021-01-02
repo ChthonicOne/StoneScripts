@@ -62,30 +62,30 @@ func IceShield()
 
 func IceSlowWand(hand)
   ?hand = ＂l＂
-    equipL Ice Wand +6 8* dI
+    equipL Ice Wand +7 8* dI
   :
-    equipR Ice Wand +6 8* dI
+    equipR Ice Wand +7 8* dI
 
 func PoisonCritbow()
-  equip Poison Crossbow +6 9* D
+  equip Poison Crossbow +7 9* D
 
 func PoisonHammer(hand)
   ?hand = ＂l＂
-    equipL Poison Hammer +6 8* D
+    equipL Poison Hammer +7 9* D
   :
-    equipR Poison Hammer +6 8* D
+    equipR Poison Hammer +7 9* D
 
 func PoisonSword(hand)
   ?hand = ＂l＂
-    equipL Big Poison Sword +6 7* dP
+    equipL Big Poison Sword +7 10* dP
   :
-    equipR Big Poison Sword +6 7* dP
+    equipR Big Poison Sword +7 10* dP
 
 func PoisonShield()
-  equip Poison Shield +6 7* ap
+  equip Poison Shield +7 9* ap
   
 func Bardiche()
-  equip Bardiche +3 10*
+  equip Bardiche +6 10*
 
 func Star(hand)
   ?hand = ＂l＂
@@ -100,8 +100,23 @@ func Mind(hand)
     :
       equipR mind
 
+func Ouro(hand)
+  ?hand = ＂l＂
+    equipL Ouroboros
+  :
+    equipR Ouroboros
+
 func Shovel()
   equip shovel
+  
+func Axe(hand)
+  ?hand = ＂l＂
+    equipL hatchet
+  :
+    equipR hatchet
+    
+func CShield()
+  equip Compound Shield +2 8*
 
 func FireSwordAndShield()
   FireSword(l)
