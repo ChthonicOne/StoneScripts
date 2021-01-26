@@ -1,0 +1,84 @@
+var g = new gear
+
+?loc = rocky
+  ?harvest.distance < 10
+    g.Shovel()
+  :?pickup.distance < 10
+    g.Star(r)
+    g.Trisk(l)
+  :?foe.distance > 16
+    g.Trisk(l)
+    g.FireShield() 
+  :?foe.distance >= 11 & foe.distance <= 16
+    ?item.GetCooldown(＂dash＂) <= 0
+      g.Dash()
+    :
+      g.Bash()
+  :?foe.distance < 11
+    ?foe.buffs.count = 0
+      Begin()
+    :
+      PhaseTwo()
+  
+func Begin()
+  ?foe.debuffs.string ! ＂dot_＂
+    ?foe.debuffs.string ! ＂dot_＂
+      g.FireShield()
+      ?foe.debuffs.string ! ＂dot:＂
+        g.BurningSword(l)
+      :?foe.debuffs.string ! ＂damage:＂
+        g.PoisonSword(l)
+      :?foe.debuffs.count < 8
+        g.ChillSword(l)
+      :
+        g.LifeSword(l)
+  :
+    ?foe.debuffs.string ! ＂dot:＂
+      g.BurningSword(r)
+      ?foe.debuffs.string ! ＂damage:＂
+        g.PoisonSword(l)
+      :?foe.debuffs.count < 8
+        g.ChillSword(l)
+      :
+        g.LifeSword(l)
+    :
+      ?foe.debuffs.string ! ＂damage:＂
+        g.PoisonSword(l)
+        ?foe.debuffs.count < 8
+          g.ChillSword(r)
+        :
+          g.LifeSword(r)
+      :?foe.debuffs.count < 9
+        g.ChillSword(l)
+        g.LifeSword(r)
+      :?hp <= maxhp - 15
+        g.LifeStealSword(l)
+        g.LifeHammer(r)
+      :?hp <= maxhp
+        ?foe.armor > 0
+           g.PoisonHammer(l)
+        :
+           g.IceSword(l)
+        g.LifeStealSword(r)
+      :?(item.GetCooldown(＂bardiche＂) <= 0 | item.GetCooldown(＂bardiche＂) > 870) & debuffs.string ! chill
+        g.Bardiche()
+        activate R
+      :
+        ?foe.armor > 0
+          g.PoisonHammer(l)
+          g.AetherHammer(r)
+        :
+          g.Bardiche()
+
+func PhaseTwo()
+  ?(item.GetCooldown(＂bardiche＂) <= 0 | item.GetCooldown(＂bardiche＂) > 870) & debuffs.string ! chill
+    g.Bardiche()
+    activate R
+  :?hp = maxhp
+    g.Bardiche()
+  :?hp >= maxhp - 15
+    g.LifeSword(r)
+    g.LifeStealSword(l)
+  :
+    g.LifeStealSword(l)
+    g.LifeHammer(r)

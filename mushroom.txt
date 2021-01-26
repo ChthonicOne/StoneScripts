@@ -1,6 +1,11 @@
 var g = new gear
 
+var counter = 0
+var found = "x"
 ?loc = mushroom
+  ?loc.loop
+    counter = 0
+    found = "x"
   ?hp < 11
     activate potion
   ?foe = snail
@@ -30,11 +35,23 @@ func Escargo()
     g.Bardiche()
 
 func Termites()
-  ?foe.distance > 10
-    g.Trisk(l)
-    g.PoisonShield()
-  :?foe.distance <= 10
-    g.Bardiche()
+  ?armor >= maxhp -5
+    ?foe.distance > 16
+      g.Trisk(l)
+      g.PoisonShield()
+    :?foe.distance >= 11 & foe.distance <= 16
+      ?item.GetCooldown(＂dash＂) <= 0
+        g.Dash()
+      :
+        g.Bash()
+    :
+      g.Bardiche()
+  :
+    ?foe.distance > 10
+      g.Trisk(l)
+      g.PoisonShield()
+    :?foe.distance <= 10
+      g.Bardiche()
 
 func Mound()
   ?foe.distance > 16
@@ -47,11 +64,17 @@ func Mound()
       g.Bash()
   :?foe.distance <= 10
     ?hp < maxhp - 30
-      g.LifeStealSword(l)
+      ?foe.count > 1
+        g.LifeStealBigSword(l)
+      :
+        g.LifeStealSword(l)
       g.LifeShield()
     :?hp < maxhp
       g.PoisonSword(l)
-      g.LifeStealSword(r)
+      ?foe.count > 1
+        g.LifeStealBigSword(r)
+      :
+        g.LifeStealSword(r)
     :?item.GetCooldown(＂bardiche＂) <= 0 | item.GetCooldown(＂bardiche＂) > 870
       g.Bardiche()
       activate R
@@ -82,22 +105,31 @@ func BigBoss()
         g.PoisonHammer(l)
       ?foe.debuffs.string ! ＂dot_＂ & foe.state ! 0
         g.FireShield()
-      :
+      :?foe.debuffs.string ! ＂damage:＂
         g.PoisonSword(r)
+      :
+        g.PoisonShortSword(r)
   
 func ArmorBoss()
+  found = draw.GetSymbol(28,16)
+  ?found = "o"
+    counter = 5
   ?foe.state = 32 | foe.state = 33
     ?item.GetCooldown(＂mind＂) = 0
       g.Mind(r)
     :
       ?foe.distance >= 10
-        g.PoisonCritbow()
+        ?counter > 0
+          counter--
+          g.Crossbow(l)
+          g.PoisonShield()
+        :
+          g.PoisonCritbow()
   :
     ?foe.distance > 16
       g.Trisk(l)
       g.PoisonShield()
     ?foe.distance >= 11 & foe.distance <= 16
-      >`0,10,@foe.state@
       ?item.GetCooldown(＂dash＂) = 0
         g.Dash()
       :
@@ -107,7 +139,13 @@ func ArmorBoss()
         g.FireSword(l)
       :
         g.PoisonHammer(l)
-      g.PoisonSword(r)
+      ?counter > 0
+        counter--
+        g.PoisonShield()
+      :?foe.debuffs.string ! ＂damage:＂
+        g.PoisonSword(r)
+      :
+        g.PoisonShortSword(r)
 
 func BackBoss()
   ?foe.distance > 16
@@ -125,5 +163,7 @@ func BackBoss()
       g.PoisonHammer(l)
     ?foe.debuffs.string ! ＂dot_＂ & foe.state ! 0
       g.FireShield()
-    :
+    :?foe.debuffs.string ! ＂damage:＂
       g.PoisonSword(r)
+    :
+      g.PoisonShortSword(r)

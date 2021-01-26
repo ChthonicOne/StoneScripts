@@ -19,7 +19,7 @@ var bck = -1
 
 func Mobs()
   ?foe.distance <= 23 & foe.distance >= 17
-    g.IceCrossbow()
+    g.RepCrossbow()
   :?foe.distance >= 11 & foe.distance <= 16
     ?item.GetCooldown(＂dash＂) <= 0
       g.Dash()
@@ -27,15 +27,6 @@ func Mobs()
       g.Bash()
   :?foe.distance < 11
     g.Bardiche()
-//    ?hp >= maxhp
-//      g.IceSword(l)
-//      g.IceShield()
-//    :?hp <= maxhp - 15
-//      g.IceSword(l)
-//      g.LifeStealSword(r)
-//    :
-//      g.LifeStealSword(l)
-//      g.LifeShield()
   :
     g.Trisk(l)
     g.IceShield()
@@ -45,18 +36,9 @@ func Scorpions()
   ^item.GetCooldown(＂mind＂) <= 0
     g.Mind(l)
   :?foe.distance < 23 & foe.distance > 10
-    g.IceCrossbow()
+    g.RepCrossbow()
   :?foe.distance <= 10
     g.Bardiche()
-//    ?hp >= maxhp
-//      g.IceSword(l)
-//     g.IceShield()
-//    :?hp <= maxhp - 15
-//      g.IceSword(l)
-//      g.LifeStealSword(r)
-//    :
-//      g.LifeStealSword(l)
-//      g.LifeShield()
   :
     g.Trisk(l)
     g.IceShield()
@@ -71,21 +53,15 @@ func Eggs()
       g.Bash()
   :?foe.distance < 11
     g.Bardiche()
-//    ?hp >= maxhp
-//      g.IceSword(l)
-//      g.IceShield()
-//    :?hp <= maxhp - 15
-//      g.IceSword(l)
-//      g.LifeStealSword(r)
-//    :
-//      g.LifeStealSword(l)
-//      g.LifeShield()
   :
     g.Trisk(l)
     g.IceShield()
 
 func Spider()
-  ?fwd <= 0 & foe.state = 133 & item.GetCooldown(＂mind＂) <= 15 & armor < 2
+  ?foe.state = 1 & hp < maxhp
+    g.Ouro(l)
+    g.IceShield()
+  :?fwd <= 0 & foe.state = 133 & item.GetCooldown(＂mind＂) <= 15 & armor < 2
     fwd = 1
     g.IceSword(l)
     g.Dash()
@@ -100,7 +76,10 @@ func Spider()
       :?foe.debuffs.string ! ＂damage:＂
         g.PoisonSword(r)
       :
-        g.LifeStealSword(r)
+        ?foe.count > 1
+          g.LifeStealBigSword(r)
+        :
+          g.LifeStealSword(r)
     :?foe.debuffs.string ! ＂dot:＂
       g.FireSword(r)
     :?foe.debuffs.string ! ＂damage:＂
@@ -109,7 +88,11 @@ func Spider()
     g.Trisk(l)
     g.LifeShield()
   :
-    g.IceCritbow()
+    ?foe.state = 133
+      g.Crossbow(l)
+      g.PoisonShield()
+    :
+      g.IceCritbow()
   ?foe.state ! 142 
     bck = 0
   ?foe.state ! 133

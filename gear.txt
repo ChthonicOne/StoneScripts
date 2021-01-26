@@ -12,53 +12,112 @@ func Bash()
   ?item.GetCooldown(＂bash＂) <= 0
     equip bashing
 
+func Quest(hand)
+  ?hand = ＂l＂
+    equipL quest
+  :
+    equipR quest
+
+
+func BigBurningSword(hand)
+  ?hand = ＂l＂
+    equipL Big Fire Sword +7 10* dF
+  :
+    equipR Big Fire Sword +7 10* dF
+
+func BigFireSword(hand)
+  ?hand = ＂l＂
+    equipL Big Fire Sword +5 10* D
+  :
+    equipR Big Fire Sword +5 10* D
+
+func BurningSword(hand)
+  ?hand = ＂l＂
+    equipL Fire Sword +4 10* dF
+  :
+    equipR Fire Sword +4 10* dF
+
 func FireSword(hand)
   ?hand = ＂l＂
-    equipL Big Fire Sword +6 7*
+    equipL Fire Sword +5 10* D
   :
-    equipR Big Fire Sword +6 7*
+    equipR Fire Sword +5 10* D
+
+func FireArmorHammer(hand)
+  ?hand = ＂l＂
+    equipL Fire Hammer +6 10* af
+  :
+    equipR Fire Hammer +6 10* af
 
 func FireShield()
-  equipR Fire Shield +6 7* af
+  equipR Fire Shield +7 10* af
+
+func LifeStealBigSword(hand)
+  ?hand = ＂l＂
+    equipL Big Vigor Sword +8 10* dL
+  :
+    equipR Big Vigor Sword +8 10* dL
 
 func LifeStealSword(hand)
   ?hand = ＂l＂
-    equipL Big Vigor Sword +7 8* dL
+    equipL Vigor Sword +15 10* dL
   :
-    equipR Big Vigor Sword +7 8* dL
+    equipR Vigor Sword +15 10* dL
+
+func LifeSword(hand)
+  ?hand = ＂l＂
+    equipL Vigor Sword +10 10* D
+  :
+    equipR Vigor Sword +10 10* D
+
+func LifeBigSword(hand)
+  ?hand = ＂l＂
+    equipL Big Vigor Sword +7 10* D
+  :
+    equipR Big Vigor Sword +7 10* D
+
+func LifeCritbow()
+  equip Vigor Crossbow +10 10* D
+
 
 func LifeShield()
-  equipR Vigor Shield +7 8* ah
+  equipR Vigor Shield +7 10* ah
+
+func LifeHammer(hand)
+  ?hand = ＂l＂
+    equipL Vigor Hammer +7 10* ah
+  :
+    equipR Vigor Hammer +7 10* ah
 
 func LifeStealWand(hand)
   ?hand = ＂l＂
-    equipL Vigor Wand +9 8* dL
+    equipL Vigor Wand +9 10* dL
   :
-    equipR Vigor Wand +9 8* dL
+    equipR Vigor Wand +9 10* dL
 
 func LifeWand(hand)
   ?hand = ＂l＂
-    equipL Vigor Wand +6 8* D
+    equipL Vigor Wand +9 10* D
   :
-    equipR Vigor Wand +6 8* D
+    equipR Vigor Wand +9 10* D
 
 func FireCrossbow()
-  equip Fire Crossbow +6 7* D
+  equip Fire Crossbow +7 10* D
 
 func IceSword(hand)
   ?hand = ＂l＂
-    equipL Big Ice Sword +6 9* D
+    equipL Big Ice Sword +7 9* D
   :
-    equipR Big Ice Sword +6 9* D
+    equipR Big Ice Sword +7 9* D
 
 func IceCrossbow()
   equip Ice Crossbow +7 9* D
 
 func IceCritbow()
-  equip Ice Crossbow +8 10* D
+  equip Ice Crossbow +10 10* D
 
 func IceShield()
-  equipR Ice Shield +6 9* ai
+  equipR Ice Shield +7 9* ai
 
 func IceSlowWand(hand)
   ?hand = ＂l＂
@@ -66,14 +125,20 @@ func IceSlowWand(hand)
   :
     equipR Ice Wand +7 8* dI
 
+func ChillSword(hand)
+  ?hand = ＂l＂
+    equipL Ice Sword +1 10* dI
+  :
+    equipR Ice Sword +1 10* dI
+
 func PoisonCritbow()
-  equip Poison Crossbow +7 9* D
+  equip Poison Crossbow +7 10* D
 
 func PoisonHammer(hand)
   ?hand = ＂l＂
-    equipL Poison Hammer +7 9* D
+    equipL Poison Hammer +11 10* D
   :
-    equipR Poison Hammer +7 9* D
+    equipR Poison Hammer +11 10* D
 
 func PoisonSword(hand)
   ?hand = ＂l＂
@@ -81,11 +146,17 @@ func PoisonSword(hand)
   :
     equipR Big Poison Sword +7 10* dP
 
+func PoisonShortSword(hand)
+  ?hand = ＂l＂
+    equipL Poison Sword +7 10* D
+  :
+    equipR Poison Sword +7 10* D
+
 func PoisonShield()
-  equip Poison Shield +7 9* ap
+  equip Poison Shield +10 10* ap
   
 func Bardiche()
-  equip Bardiche +6 10*
+  equip Bardiche +15 10*
 
 func Star(hand)
   ?hand = ＂l＂
@@ -107,23 +178,63 @@ func Ouro(hand)
     equipR Ouroboros
 
 func Shovel()
-  equip shovel
+  equipR shovel
   
 func Axe(hand)
   ?hand = ＂l＂
     equipL hatchet
   :
     equipR hatchet
-    
-func CShield()
-  equip Compound Shield +2 8*
 
-func FireSwordAndShield()
-  FireSword(l)
+func AetherHammer(hand)
+  ?hand = ＂l＂
+    equipL Aether Hammer +11 10* D
+  :
+    equipR Aether Hammer +11 10* D
+
+func AetherArmorHammer(hand)
+  ?hand = ＂l＂
+    equipL Aether Hammer +11 10* A
+  :
+    equipR Aether Hammer +11 10* A
+
+
+func AetherCrossbow()
+  equip Aether Crossbow +15 10* D
+
+func BigAetherSword(hand)
+  ?hand = ＂l＂
+    equipL Big Aether Sword +7 10* D
+  :
+    equipR Big Aether Sword +7 10* D
+
+func AetherSword(hand)
+  ?hand = ＂l＂
+    equipL Aether Sword +11 10* D
+  :
+    equipR Aether Sword +11 10* D
+
+func Crossbow(hand)
+  ?hand = ＂l＂
+    equipL Crossbow +11 10*
+  :
+    equipR Crossbow +11 10*
+
+func RepCrossbow()
+  equip Repeating Crossbow +7 10*
+
+func CShield()
+  equip Compound Shield +7 10*
+
+func BigBurningSwordAndShield()
+  BigBurningSword(l)
   FireShield()
 
 func LifeStealSwordAndShield()
-  LifeStealSword(l)
+  ?foe.count > 1
+    LifeStealBigSword(l)
+  :
+    LifeStealSword(l)
   LifeShield()
 
 func IceSwordAndShield()

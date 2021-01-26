@@ -29,7 +29,7 @@ func Bugs()
     g.Trisk(l)
     g.CShield()
   :?foe.distance <= 22 & foe.distance >= 10
-    g.IceCritbow()
+    g.RepCrossbow()
   :
     g.Bardiche()
   
@@ -55,7 +55,7 @@ func Tree()
          g.Trisk(l)
          g.CShield()
        :
-         g.IceCritbow()
+         g.RepCrossbow()
     :?toggle <= 0
       ?item.GetCooldown(＂bash＂) = 0 & foe.distance >= 11 & counter = 25
         g.Bash()
@@ -84,16 +84,16 @@ func Tree()
         g.Trisk(l)
         g.CShield()
       :
-        g.IceCritbow() 
+        g.RepCrossbow() 
 
 func ChooseSwords()
   ?foe.debuffs.string ! ＂dot:＂
-    g.FireSword(r)
-    g.IceSword(l)
+    g.BigBurningSword(r)
+    g.LifeSword(l)
   :?foe.debuffs.string ! ＂damage:＂
     g.PoisonSword(r)
-    g.IceSword(l)
+    g.LifeSword(l)
   :
     g.Bardiche()
-    ?item.GetCooldown(＂bardiche＂) <= 0 | item.GetCooldown(＂bardiche＂)
+    ?item.GetCooldown(＂bardiche＂) <= 0 | item.GetCooldown(＂bardiche＂) > 870
       activate R

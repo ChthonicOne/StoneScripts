@@ -32,14 +32,18 @@ func MeleeFoe()
     g.Trisk(l)
     g.LifeShield()
   :?foe.distance <= 22 & foe.distance > 16 
-    g.IceCrossbow()
+    g.LifeCritbow()
   :?foe.distance <= 16 & foe.distance >= 10
     ?item.GetCooldown(＂dash＂) <= 0
       g.Dash()
     :
       g.Bash()
   :?foe.distance <= 9
-    g.LifeStealSwordAndShield()
+    ?hp < maxhp
+      g.LifeStealSwordAndShield()
+    :
+      g.LifeSword(l)
+      g.LifeBigSword(r)
     
 func Ghost()
   ?foe.distance >= 21
@@ -53,31 +57,41 @@ func Ghost()
     g.LifeWand(r)
 
 func PallasSkinless()
-  ?counter = 65 & item.GetCooldown(＂mind＂) = 0
+  >`0,11,@counter@
+  ?counter = 65 & item.GetCooldown(＂mind＂) = 0 & armor < 1 // I'd rather get hit while I have armor
     g.Mind(r)
   :?foe.distance > 22
     g.Trisk(l)
     g.LifeShield()
   :
-    g.IceCritbow()
+    g.LifeCritbow()
 
 func PallasLegless() // He has a ghost, but the ghost never gets close as we're close to him so we shouldn't have to worry.
   ?foe.distance > 16
     g.Trisk(l)
     g.LifeShield()
   :?foe.distance <= 16 & foe.distance >= 10
-    ?item.GetCooldown(＂dash＂) <= 0
-      g.Dash()
-    :
+    ?item.GetCooldown(＂bash＂) <= 0 & foe.count > 1
       g.Bash()
+    :
+      g.Dash()
   :
-    g.LifeStealSword(l)     //Need stronger splash sword
+    ?foe.count > 1
+      g.LifeBigSword(l)
+    :
+      g.LifeSword(l)
     ?foe.debuffs.string ! ＂dot:＂
       g.FireSword(r)
     :?foe.debuffs.string ! "damage:"
       g.PoisonSword(r)
     :
       ?hp < maxhp - 30 | reset = 1
-        g.LifeShield()      //Replace with lifestealsword when I get stronger splash sword
+        ?foe.count > 1
+          g.LifeStealBigSword(r)
+        :
+          g.LifeStealSword(r)
       :
-        g.IceSword(r)
+        ?foe.count > 1
+          g.IceSword(r)
+        :
+          g.LifeBigSword(r)

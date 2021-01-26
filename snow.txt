@@ -1,0 +1,143 @@
+var g = new gear
+
+?loc = icy
+  ?foe ! boss & foe ! ice wall
+    ?hp < 20
+      activate potion
+    ?foe = ki
+      HeatStealers()
+    :?foe = pillar
+      Spawners()
+    :
+      Icycles()
+  ?foe = boss | foe = ice wall
+    ?foe = boss
+      Stewie()
+    :
+      Snowfort()
+
+func HeatStealers()
+  ?foe.distance >= 11 & foe.distance <= 16
+    ?item.GetCooldown(＂dash＂) <= 0
+      g.Dash()
+    :
+      g.Bash()
+  :?foe.distance <= 10
+    ?foe.count > 1
+      g.Bardiche()
+    :
+      g.FireSword(l)
+      g.FireArmorHammer(r)
+  :
+    g.Trisk(l)
+    g.FireArmorHammer(r)
+
+func Spawners()
+  ?foe.distance >= 11 & foe.distance <= 16
+    ?item.GetCooldown(＂dash＂) <= 0
+      g.Dash()
+    :
+      g.Bash()
+  :?foe.distance < 11
+    ?foe.count > 4
+      g.Bardiche()
+    :?foe.count > 1
+      ?hp < maxhp - 2
+        g.LifeStealBigSword(l)
+        g.FireArmorHammer(r)
+      :
+        g.BigFireSword(l)
+        g.FireArmorHammer(r)
+    :
+      ?hp < maxhp - 2
+        g.LifeStealSword(l)
+        g.FireArmorHammer(r)
+      :
+        g.FireSword(l)
+        g.FireArmorHammer(r)
+    ?foe.debuffs.string ! ＂dot:＂
+      ?foe.count > 1
+        g.BigBurningSword(r)
+      :
+        g.BurningSword(r)
+      ?foe.count > 4
+        g.BigFireSword(l)
+  :
+    g.Trisk(l)
+    g.FireArmorHammer(r)
+
+func Icycles()
+  ?foe.distance >= 11 & foe.distance <= 16
+    ?item.GetCooldown(＂dash＂) <= 0
+      g.Dash()
+    :
+      g.Bash()
+  :?foe.distance < 11
+    ?foe.count > 1
+      g.Bardiche()
+    :
+      g.FireSword(l)
+      g.FireArmorHammer(r)
+  :
+    g.Trisk(l)
+    g.FireArmorHammer(r)
+
+func Stewie()
+  >`0,0,@foe.state@ @foe.distance@
+  ?foe.state ! 133
+    ?foe.distance >= 11 & foe.distance <= 16 
+      ?item.GetCooldown(＂dash＂) <= 0
+        g.Dash()
+      :
+        g.Bash()
+    :?foe.distance < 11
+      ?foe.debuffs.count >= 8
+        ?hp >= (maxhp - 2)
+          g.FireSword(l)
+          g.BurningSword(r)
+        :
+          g.LifeStealSword(l)
+          g.LifeHammer(r)
+      :
+        ?foe.debuffs.string ! ＂dot:＂
+          g.BurningSword(l)
+        :
+          ?hp >= (maxhp - 2)
+            g.FireSword(l)
+          :
+            g.LifeStealSword(l)
+        ?foe.debuffs.string ! ＂dot_＂ & foe.state ! 0
+          g.FireShield()
+        :
+          ?hp >= maxhp - 2 | foe.state = 0 
+            g.LifeStealSword(r)
+          :
+            g.LifeHammer(r)
+        ?foe.debuffs.string = ＂dot:＂
+          ?foe.state ! 0 & foe.debuffs.count < 8
+            g.ChillSword(l)
+            ?foe.debuffs.string = ＂dot_＂
+              ?hp < maxhp - 2
+                g.LifeStealSword(r)
+              :
+                g.FireSword(r)
+          :?foe.state = 0 & foe.debuffs.count < 7
+            g.ChillSword(l)
+            ?hp < maxhp - 2
+              g.LifeStealSword(r)
+            :
+              g.FireSword(r)
+  :
+    g.FireCrossbow()
+
+func Snowfort()
+  ?foe.debuffs.count > 0
+    ?hp >= maxhp - 2
+      g.Bardiche()
+    :
+      g.LifeStealBigSword(l)
+      g.LifeHammer(r)
+  :
+    g.BigBurningSword(l)
+    g.FireShield()
+    

@@ -1,0 +1,100 @@
+var g = new gear
+
+?loc = mine
+  var delay = 0
+  var i = 0
+  ?loc.loop
+    delay = 0
+    i = 0
+  ?hp < 11
+    activate potion
+  ?foe = Walker
+    Robots()
+  :?foe ! boss
+    Other()
+  :?foe = boss
+    Giant()
+  ?pickup.distance < 10
+    g.Trisk(l)
+    g.Star(r)
+
+func Robots()
+  ?foe.distance > 16
+   g.Trisk(l)
+   g.AetherArmorHammer(r)
+  :?foe.distance <= 16 & foe.distance >= 10
+    ?item.GetCooldown(＂dash＂) <= 0
+      g.AetherArmorHammer(l)
+      g.Dash()
+    :
+      g.AetherArmorHammer(l)
+      g.Bash()
+  :
+    ?foe.armor > 0
+      g.AetherHammer(l)
+      g.AetherArmorHammer(r)
+    :
+      g.Bardiche()
+
+func Other()
+  ?foe.distance > 16
+    g.Trisk(l)
+    g.AetherArmorHammer(r)
+  :?foe.distance <= 16 & foe.distance >= 10
+    ?item.GetCooldown(＂dash＂) <= 0
+      g.AetherArmorHammer(l)
+      g.Dash()
+    :
+      g.AetherArmorHammer(l)
+      g.Bash()
+  :
+    ?foe.count > 1
+      ?hp < maxhp
+        g.LifeStealBigSword(l)
+        g.AetherArmorHammer(r)
+      :
+        g.Bardiche()
+    :
+      ?hp < maxhp
+        g.LifeStealSword(l)
+        g.AetherArmorHammer(r)
+      :
+        g.Bardiche()
+
+func Giant()
+  ?foe.state = 2
+    i = 0
+    g.AetherCrossbow()
+  :?foe.state = 32
+    delay++
+    ?delay = 8
+      g.Mind(l)
+      g.CShield()
+  :?foe.state = 33
+    delay = 0
+    ?i = 0 & foe.distance < 7
+      i = 1
+    ?foe.distance > 16 & i = 0
+      g.Trisk(l)
+      g.AetherSword(r)
+    :?foe.distance <= 16 & foe.distance >= 10 & i = 0
+       ?item.GetCooldown(＂dash＂) <= 0
+         g.AetherHammer(l)
+         g.Dash()
+       :
+         g.AetherArmorHammer(l)
+         g.Bash()
+    :
+      ?foe.armor > 500 | (foe.hp > 500 & foe.armor = 0)
+        ?item.GetCooldown(＂bardiche＂) <= 0 | item.GetCooldown(＂bardiche＂) > 870
+          g.Bardiche()
+          activate R
+        :
+          g.AetherHammer(l)
+          g.AetherSword(r)
+      :
+        g.AetherHammer(l)
+        g.AetherSword(r)
+    ?i = 1 & foe.distance > 7
+      equip ther Crossbow
+    
