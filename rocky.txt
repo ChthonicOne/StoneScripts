@@ -1,6 +1,28 @@
 var g = new gear
 
+?loc.begin
+  var burn = 0
+  var poison = 0
+  var chill = 0
+  var lifesteal = 0
+  var onehand = 0
+  var counter = 0
+  var attack = 0
+  var attackEnd = true
+  var reset = 30
+  var signal = 999
+?loc.loop
+  counter = 0
+  attack = 0
+  attackEnd = true
+  reset = 15
+  signal = 999
 ?loc = rocky
+  burn = 0
+  poison = 0
+  chill = 0
+  lifesteal = 0
+  onehand = 0
   ?harvest.distance < 10
     g.Shovel()
   :?pickup.distance < 10
@@ -15,70 +37,163 @@ var g = new gear
     :
       g.Bash()
   :?foe.distance < 11
-    ?foe.buffs.count = 0
+    ?foe ! "elementalist"
       Begin()
     :
       PhaseTwo()
   
 func Begin()
-  ?foe.debuffs.string ! ＂dot_＂
-    ?foe.debuffs.string ! ＂dot_＂
-      g.FireShield()
-      ?foe.debuffs.string ! ＂dot:＂
-        g.BurningSword(l)
-      :?foe.debuffs.string ! ＂damage:＂
-        g.PoisonSword(l)
-      :?foe.debuffs.count < 8
-        g.ChillSword(l)
-      :
-        g.LifeSword(l)
-  :
-    ?foe.debuffs.string ! ＂dot:＂
-      g.BurningSword(r)
-      ?foe.debuffs.string ! ＂damage:＂
-        g.PoisonSword(l)
-      :?foe.debuffs.count < 8
-        g.ChillSword(l)
-      :
-        g.LifeSword(l)
+  ?foe = perfected
+    >`0,11,@counter@
+  ?foe = perfected & foe.state = 115
+    counter++
+    attack = 0
+    signal = 77
+  ?foe = perfected & foe.state = 32
+    ?attackEnd = true
+      attackEnd = false
+      attack++
+    ?attack = 3
+      counter++
+      reset = 30
+      signal = 63 + foe.debuffs.count
+      ?foe.debuffs.string = ＂dot_＂
+        signal--
+      ?foe.debuffs.string = ＂dot:＂
+        signal--
+      ?foe.debuffs.string = ＂damage:＂
+        signal--
+  ?foe = perfected & foe.state = 33
+    attackEnd = true
+    ?reset > 0
+      reset--
     :
-      ?foe.debuffs.string ! ＂damage:＂
-        g.PoisonSword(l)
-        ?foe.debuffs.count < 8
-          g.ChillSword(r)
-        :
-          g.LifeSword(r)
-      :?foe.debuffs.count < 9
-        g.ChillSword(l)
-        g.LifeSword(r)
-      :?hp <= maxhp - 15
-        g.LifeStealSword(l)
-        g.LifeHammer(r)
-      :?hp <= maxhp
-        ?foe.armor > 0
-           g.PoisonHammer(l)
-        :
-           g.IceSword(l)
-        g.LifeStealSword(r)
-      :?(item.GetCooldown(＂bardiche＂) <= 0 | item.GetCooldown(＂bardiche＂) > 870) & debuffs.string ! chill
-        g.Bardiche()
-        activate R
-      :
-        ?foe.armor > 0
-          g.PoisonHammer(l)
-          g.AetherHammer(r)
-        :
-          g.Bardiche()
+      counter = 0
+  
+  ?foe = perfected & counter = signal
+    g.Mind(l)
+  :?(item.GetCooldown(＂bardiche＂) <= 0 | item.GetCooldown(＂bardiche＂) > 870) & debuffs.string ! chill
+    g.Bardiche()
+    activate R
+  :
+    ChooseDebuffWeapon(l)
+    ChooseDebuffWeapon(r)
 
 func PhaseTwo()
   ?(item.GetCooldown(＂bardiche＂) <= 0 | item.GetCooldown(＂bardiche＂) > 870) & debuffs.string ! chill
     g.Bardiche()
     activate R
-  :?hp = maxhp
-    g.Bardiche()
-  :?hp >= maxhp - 15
-    g.LifeSword(r)
-    g.LifeStealSword(l)
   :
-    g.LifeStealSword(l)
-    g.LifeHammer(r)
+    ChooseMainWeapon()
+    ?foe.buffs.count = 0
+      ChooseDebuffWeapon(r)
+    :?hp <= maxhp - 15
+      ?lifesteal = 0
+        g.LifeStealSword(hand)
+        lifesteal = 1
+      :
+        g.LifeHammer(hand)
+    :?hp < maxhp
+      ?lifesteal = 0
+        g.LifeStealSword(hand)
+        lifesteal = 1
+      :
+        ?foe.armor > 0
+          g.PoisonHammer(hand)
+        :
+          g.AetherHammer(hand)
+    :?onehand = 1 | foe.armor > 0
+      g.PoisonHammer(r)
+    :
+      g.Bardiche()
+
+func ChooseDebuffWeapon(hand)
+  ?hand ! "l"
+    ?foe.debuffs.string ! ＂dot_＂
+      g.FireShield()
+    :?foe.debuffs.string ! ＂dot:＂ & burn = 0
+      g.BurningSword(hand)
+      burn = 1
+    :?foe.debuffs.string ! ＂damage:＂ & poison = 0
+      g.PoisonSword(hand)
+      poison = 1
+    :?foe.debuffs.count < (9 - burn - poison) & chill = 0
+      g.ChillSword(hand)
+      chill = 1
+    :?hp <= maxhp - 15
+      ?lifesteal = 0
+        g.LifeStealSword(hand)
+        lifesteal = 1
+      :
+        g.LifeHammer(hand)
+    :?hp < maxhp
+      ?lifesteal = 0
+        g.LifeStealSword(hand)
+        lifesteal = 1
+      :
+        ?foe.armor > 0
+          g.PoisonHammer(hand)
+        :
+          g.AetherHammer(hand)
+    :?onehand = 1 | foe.armor > 0
+      g.PoisonHammer(r)
+    :
+      g.Bardiche()
+  :
+    ?foe.debuffs.string ! ＂dot:＂ & burn = 0
+      g.BurningSword(hand)
+      burn = 1
+      onehand = 1
+    :?foe.debuffs.string ! ＂damage:＂ & poison = 0
+      g.PoisonSword(hand)
+      poison = 1
+      onehand = 1
+    :?foe.debuffs.count < (8 - burn - poison) & chill = 0
+      g.ChillSword(hand)
+      chill = 1
+      onehand = 1
+    :?hp <= maxhp - 15
+      ?lifesteal = 0
+        g.LifeStealSword(hand)
+        lifesteal = 1
+      :
+        g.LifeHammer(hand)
+    :?hp < maxhp
+      ?lifesteal = 0
+        g.LifeStealSword(hand)
+        lifesteal = 1
+      :
+        ?foe.armor > 0
+          g.PoisonHammer(hand)
+        :
+          g.AetherHammer(hand)
+    :?foe.armor > 0
+      g.PoisonHammer(hand)
+    :
+      g.LifeSword(hand)
+
+func ChooseMainWeapon()
+  ?foe = Poison
+    g.IceSword(l)
+    onehand = 1
+  :?foe = vigor
+    g.PoisonSword(l)
+    onehand = 1
+  :?foe = aether
+    g.LifeSword(l)
+    onehand = 1
+  :?foe = fire
+    g.AetherSword(l)
+    onehand = 1
+  :?foe = ice
+    g.FireSword(l)
+    onehand = 1
+  :?hp < maxhp
+    ?lifesteal = 0
+      g.LifeStealSword(l)
+      lifesteal = 1
+    :
+      g.LifeHammer(l)
+    onehand = 1
+  :
+    g.Bardiche()

@@ -63,16 +63,19 @@ func Spider()
     g.IceShield()
   :?fwd <= 0 & foe.state = 133 & item.GetCooldown(＂mind＂) <= 15 & armor < 2
     fwd = 1
-    g.IceSword(l)
-    g.Dash()
+    g.ChillSword(l)
+    ?item.GetCooldown(＂bash＂) <= 0
+      g.Bash()
+    :
+      g.Dash()
   :?bck <= 0 & foe.state = 142 & item.GetCooldown(＂mind＂) <= 0
     bck = 1
     g.Mind(l)
   :?foe.distance < 10
-    g.IceSword(l)
+    g.ChillSword(l)
     ?hp < maxhp
       ?foe.debuffs.string ! ＂dot:＂
-        g.FireSword(r)
+        g.BigBurningSword(r)
       :?foe.debuffs.string ! ＂damage:＂
         g.PoisonSword(r)
       :
@@ -81,10 +84,10 @@ func Spider()
         :
           g.LifeStealSword(r)
     :?foe.debuffs.string ! ＂dot:＂
-      g.FireSword(r)
+      g.BigBurningSword(r)
     :?foe.debuffs.string ! ＂damage:＂
       g.PoisonSword(r)
-  :?foe.distance = 17
+  :?foe.distance = 17 // Take a step forward as we want to be in dashing range immediately so we don't get hit
     g.Trisk(l)
     g.LifeShield()
   :

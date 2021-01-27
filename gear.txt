@@ -21,9 +21,9 @@ func Quest(hand)
 
 func BigBurningSword(hand)
   ?hand = ＂l＂
-    equipL Big Fire Sword +7 10* dF
+    equipL Big Fire Sword +6 10* dF
   :
-    equipR Big Fire Sword +7 10* dF
+    equipR Big Fire Sword +6 10* dF
 
 func BigFireSword(hand)
   ?hand = ＂l＂
@@ -33,15 +33,15 @@ func BigFireSword(hand)
 
 func BurningSword(hand)
   ?hand = ＂l＂
-    equipL Fire Sword +4 10* dF
+    equipL Fire Sword +7 10* dF
   :
-    equipR Fire Sword +4 10* dF
+    equipR Fire Sword +7 10* dF
 
 func FireSword(hand)
   ?hand = ＂l＂
-    equipL Fire Sword +5 10* D
+    equipL Fire Sword +6 10* D
   :
-    equipR Fire Sword +5 10* D
+    equipR Fire Sword +6 10* D
 
 func FireArmorHammer(hand)
   ?hand = ＂l＂
@@ -127,9 +127,9 @@ func IceSlowWand(hand)
 
 func ChillSword(hand)
   ?hand = ＂l＂
-    equipL Ice Sword +1 10* dI
+    equipL Ice Sword +9 10* dI
   :
-    equipR Ice Sword +1 10* dI
+    equipR Ice Sword +9 10* dI
 
 func PoisonCritbow()
   equip Poison Crossbow +7 10* D
